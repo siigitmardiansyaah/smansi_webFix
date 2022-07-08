@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 04 Jul 2022 pada 16.55
--- Versi server: 10.4.22-MariaDB
--- Versi PHP: 8.0.13
+-- Generation Time: Jul 08, 2022 at 11:40 AM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 7.4.29
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,27 +18,35 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sensasiq`
+-- Database: `smansi`
 --
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbabsen`
+-- Table structure for table `tbabsen`
 --
 
 CREATE TABLE `tbabsen` (
   `id_absen` int(80) NOT NULL,
   `id_jadwal` int(20) NOT NULL,
   `id_qr` int(80) NOT NULL,
-  `nis` int(20) NOT NULL,
-  `waktu` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `id_siswa` int(20) NOT NULL,
+  `waktu_absen` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `keterangan` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `tbabsen`
+--
+
+INSERT INTO `tbabsen` (`id_absen`, `id_jadwal`, `id_qr`, `id_siswa`, `waktu_absen`, `keterangan`) VALUES
+(35, 5, 72, 1, '2022-07-08 07:30:08', 'Hadir');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbguru`
+-- Table structure for table `tbguru`
 --
 
 CREATE TABLE `tbguru` (
@@ -48,7 +56,7 @@ CREATE TABLE `tbguru` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `tbguru`
+-- Dumping data for table `tbguru`
 --
 
 INSERT INTO `tbguru` (`nip`, `nama_guru`, `password`) VALUES
@@ -67,7 +75,7 @@ INSERT INTO `tbguru` (`nip`, `nama_guru`, `password`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbjadwal`
+-- Table structure for table `tbjadwal`
 --
 
 CREATE TABLE `tbjadwal` (
@@ -79,11 +87,11 @@ CREATE TABLE `tbjadwal` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `tbjadwal`
+-- Dumping data for table `tbjadwal`
 --
 
 INSERT INTO `tbjadwal` (`id_jadwal`, `id_mapel`, `id_kelas`, `nip`, `waktu`) VALUES
-(5, 1, 1, 6969, '2019-06-19 17:00:00'),
+(5, 1, 1, 6969, '2019-06-20 12:00:00'),
 (7, 2, 2, 6969, '2019-06-29 09:30:00'),
 (8, 6, 3, 15120003, '2019-06-22 02:00:00'),
 (9, 11, 5, 15120006, '2019-06-22 09:00:00'),
@@ -105,7 +113,28 @@ INSERT INTO `tbjadwal` (`id_jadwal`, `id_mapel`, `id_kelas`, `nip`, `waktu`) VAL
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbkelas`
+-- Table structure for table `tbjadwal_siswa`
+--
+
+CREATE TABLE `tbjadwal_siswa` (
+  `id_jadwalsiswa` int(11) NOT NULL,
+  `id_siswa` int(11) NOT NULL,
+  `id_kelas` int(11) NOT NULL,
+  `id_mapel` int(11) NOT NULL,
+  `waktu` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbjadwal_siswa`
+--
+
+INSERT INTO `tbjadwal_siswa` (`id_jadwalsiswa`, `id_siswa`, `id_kelas`, `id_mapel`, `waktu`) VALUES
+(1, 1, 1, 1, '2022-07-05 03:28:43');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbkelas`
 --
 
 CREATE TABLE `tbkelas` (
@@ -114,7 +143,7 @@ CREATE TABLE `tbkelas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `tbkelas`
+-- Dumping data for table `tbkelas`
 --
 
 INSERT INTO `tbkelas` (`id_kelas`, `nama_kelas`) VALUES
@@ -129,7 +158,7 @@ INSERT INTO `tbkelas` (`id_kelas`, `nama_kelas`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbmapel`
+-- Table structure for table `tbmapel`
 --
 
 CREATE TABLE `tbmapel` (
@@ -138,7 +167,7 @@ CREATE TABLE `tbmapel` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `tbmapel`
+-- Dumping data for table `tbmapel`
 --
 
 INSERT INTO `tbmapel` (`id_mapel`, `nama_mapel`) VALUES
@@ -160,7 +189,7 @@ INSERT INTO `tbmapel` (`id_mapel`, `nama_mapel`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbqr`
+-- Table structure for table `tbqr`
 --
 
 CREATE TABLE `tbqr` (
@@ -170,7 +199,7 @@ CREATE TABLE `tbqr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `tbqr`
+-- Dumping data for table `tbqr`
 --
 
 INSERT INTO `tbqr` (`id_qr`, `nip`, `qr`) VALUES
@@ -181,7 +210,7 @@ INSERT INTO `tbqr` (`id_qr`, `nip`, `qr`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tbsiswa`
+-- Table structure for table `tbsiswa`
 --
 
 CREATE TABLE `tbsiswa` (
@@ -194,33 +223,33 @@ CREATE TABLE `tbsiswa` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `tbsiswa`
+-- Dumping data for table `tbsiswa`
 --
 
 INSERT INTO `tbsiswa` (`id_siswa`, `nis`, `nama`, `password`, `device_id`, `id_kelas`) VALUES
-(1, 1, 'sigit', '098f6bcd4621d373cade4e832627b4f6', 'd9c84cb1d7681ebb', 3);
+(1, 1, 'hahaha', '098f6bcd4621d373cade4e832627b4f6', 'd9c84cb1d7681ebb', 3);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `tbabsen`
+-- Indexes for table `tbabsen`
 --
 ALTER TABLE `tbabsen`
   ADD PRIMARY KEY (`id_absen`),
   ADD KEY `id_jadwal` (`id_jadwal`),
   ADD KEY `id_qr` (`id_qr`),
-  ADD KEY `nim` (`nis`);
+  ADD KEY `nim` (`id_siswa`);
 
 --
--- Indeks untuk tabel `tbguru`
+-- Indexes for table `tbguru`
 --
 ALTER TABLE `tbguru`
   ADD PRIMARY KEY (`nip`);
 
 --
--- Indeks untuk tabel `tbjadwal`
+-- Indexes for table `tbjadwal`
 --
 ALTER TABLE `tbjadwal`
   ADD PRIMARY KEY (`id_jadwal`),
@@ -229,85 +258,100 @@ ALTER TABLE `tbjadwal`
   ADD KEY `nip` (`nip`);
 
 --
--- Indeks untuk tabel `tbkelas`
+-- Indexes for table `tbjadwal_siswa`
+--
+ALTER TABLE `tbjadwal_siswa`
+  ADD PRIMARY KEY (`id_jadwalsiswa`),
+  ADD KEY `fk_siswa` (`id_siswa`),
+  ADD KEY `fk_kelas` (`id_kelas`),
+  ADD KEY `fk_mapel` (`id_mapel`);
+
+--
+-- Indexes for table `tbkelas`
 --
 ALTER TABLE `tbkelas`
   ADD PRIMARY KEY (`id_kelas`);
 
 --
--- Indeks untuk tabel `tbmapel`
+-- Indexes for table `tbmapel`
 --
 ALTER TABLE `tbmapel`
   ADD PRIMARY KEY (`id_mapel`);
 
 --
--- Indeks untuk tabel `tbqr`
+-- Indexes for table `tbqr`
 --
 ALTER TABLE `tbqr`
   ADD PRIMARY KEY (`id_qr`),
   ADD KEY `nip` (`nip`);
 
 --
--- Indeks untuk tabel `tbsiswa`
+-- Indexes for table `tbsiswa`
 --
 ALTER TABLE `tbsiswa`
   ADD PRIMARY KEY (`id_siswa`),
   ADD KEY `tbmahasiswa_ibfk_1` (`id_kelas`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `tbabsen`
+-- AUTO_INCREMENT for table `tbabsen`
 --
 ALTER TABLE `tbabsen`
-  MODIFY `id_absen` int(80) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id_absen` int(80) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
--- AUTO_INCREMENT untuk tabel `tbjadwal`
+-- AUTO_INCREMENT for table `tbjadwal`
 --
 ALTER TABLE `tbjadwal`
   MODIFY `id_jadwal` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT untuk tabel `tbkelas`
+-- AUTO_INCREMENT for table `tbjadwal_siswa`
+--
+ALTER TABLE `tbjadwal_siswa`
+  MODIFY `id_jadwalsiswa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `tbkelas`
 --
 ALTER TABLE `tbkelas`
   MODIFY `id_kelas` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT untuk tabel `tbmapel`
+-- AUTO_INCREMENT for table `tbmapel`
 --
 ALTER TABLE `tbmapel`
   MODIFY `id_mapel` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT untuk tabel `tbqr`
+-- AUTO_INCREMENT for table `tbqr`
 --
 ALTER TABLE `tbqr`
   MODIFY `id_qr` int(80) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
--- AUTO_INCREMENT untuk tabel `tbsiswa`
+-- AUTO_INCREMENT for table `tbsiswa`
 --
 ALTER TABLE `tbsiswa`
   MODIFY `id_siswa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `tbabsen`
+-- Constraints for table `tbabsen`
 --
 ALTER TABLE `tbabsen`
   ADD CONSTRAINT `tbabsen_ibfk_1` FOREIGN KEY (`id_jadwal`) REFERENCES `tbjadwal` (`id_jadwal`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tbabsen_ibfk_2` FOREIGN KEY (`id_qr`) REFERENCES `tbqr` (`id_qr`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `tbabsen_ibfk_3` FOREIGN KEY (`nis`) REFERENCES `tbsiswa` (`id_siswa`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `tbabsen_ibfk_3` FOREIGN KEY (`id_siswa`) REFERENCES `tbsiswa` (`id_siswa`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `tbjadwal`
+-- Constraints for table `tbjadwal`
 --
 ALTER TABLE `tbjadwal`
   ADD CONSTRAINT `tbjadwal_ibfk_1` FOREIGN KEY (`id_mapel`) REFERENCES `tbmapel` (`id_mapel`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -315,13 +359,21 @@ ALTER TABLE `tbjadwal`
   ADD CONSTRAINT `tbjadwal_ibfk_3` FOREIGN KEY (`nip`) REFERENCES `tbguru` (`nip`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `tbqr`
+-- Constraints for table `tbjadwal_siswa`
+--
+ALTER TABLE `tbjadwal_siswa`
+  ADD CONSTRAINT `fk_kelas` FOREIGN KEY (`id_kelas`) REFERENCES `tbkelas` (`id_kelas`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_mapel` FOREIGN KEY (`id_mapel`) REFERENCES `tbmapel` (`id_mapel`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_siswa` FOREIGN KEY (`id_siswa`) REFERENCES `tbsiswa` (`id_siswa`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tbqr`
 --
 ALTER TABLE `tbqr`
   ADD CONSTRAINT `tbqr_ibfk_1` FOREIGN KEY (`nip`) REFERENCES `tbguru` (`nip`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `tbsiswa`
+-- Constraints for table `tbsiswa`
 --
 ALTER TABLE `tbsiswa`
   ADD CONSTRAINT `tbsiswa_ibfk_1` FOREIGN KEY (`id_kelas`) REFERENCES `tbkelas` (`id_kelas`) ON DELETE CASCADE ON UPDATE CASCADE;
