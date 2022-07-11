@@ -24,15 +24,27 @@ class Generate extends CI_Controller {
 
 	public function generated(){		
 		$id_jadwal = $this->input->post('id_jadwal');
-		if (!empty($id_jadwal)) {			
-        	$data['datajadwal'] = $this->JadwalM->tampil_jadwal_update($id_jadwal);
+		if (!empty($id_jadwal)) {
+			$this->db->trans_start();			
+        	$data['datajadwal'] = $this->db->query("SELECT tbjadwal.id_jadwal as id_jadwal, tbjadwal.nip as nip, tbjadwal.waktu as waktu, tbkelas.nama_kelas as nama_kelas, tbmapel.nama_mapel as nama_mapel, tbmapel.id_mapel as id_mapel
+			FROM tbjadwal
+			JOIN tbkelas ON tbkelas.id_kelas = tbjadwal.id_kelas
+			JOIN tbguru ON tbguru.nip = tbjadwal.nip
+			JOIN tbmapel ON tbmapel.id_mapel = tbjadwal.id_mapel
+			WHERE tbjadwal.id_jadwal = $id_jadwal ORDER BY waktu ASC")->result_array();
+
+			$maxIDQR = $this->db->query("SELECT * FROM tbqr order by id_qr DESC")->row();
+			$id_qrnew = $maxIDQR->id_qr + 1;
+
         	foreach ($data as $dataJadwal) :
 		      $datainsert = array(
 		        "nip" => $dataJadwal[0]['nip'],
-		        "qr"  => $qrRaw = $dataJadwal[0]['id_jadwal']."-".$dataJadwal[0]['id_mapel']."-".$dataJadwal[0]['nama_kelas']."-".$dataJadwal[0]['nip']."-".time()
+		        "qr"  => $qrRaw = $dataJadwal[0]['id_jadwal']."-".$id_qrnew."-".$dataJadwal[0]['nama_kelas']."-".$dataJadwal[0]['nip']."-".time()
 		      );
 		    endforeach;
-		    $lokasiFileQr = $_SERVER['DOCUMENT_ROOT'].'/sensasiq/assets/qrimg/';
+			$this->db->trans_complete();						
+
+		    $lokasiFileQr = $_SERVER['DOCUMENT_ROOT'].'/smansi_web/assets/qrimg/';
 			$file_name = $qrRaw.".png";
 			$tempdir = $lokasiFileQr.$file_name;
 			QRcode::png($qrRaw,$tempdir,QR_ECLEVEL_H,15,0);
@@ -40,7 +52,7 @@ class Generate extends CI_Controller {
 			$infoQr = array(
 				"fileQr"	=> $file_name,
 				"qr"		=> $qrRaw,
-			);							
+			);	
 			$this->session->set_userdata('file', $file_name);					
 			$this->load->view('generated', $infoQr);
 		} else {				
