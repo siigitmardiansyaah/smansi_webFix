@@ -12,7 +12,7 @@ class MatkulM extends CI_Model{
 
   // mengambil semua data matkul
   public function all_matkul($id_siswa){
-    $this->db->select("a.id_mapel,d.nama_mapel, c.nama_kelas, DATE_FORMAT(a.waktu, '%W, %H:%i') as waktu");
+    $this->db->select("a.id_mapel,d.nama_mapel, c.nama_kelas, DATE_FORMAT(a.waktu, '%W,%H:%i') as waktu");
     $this->db->join('tbsiswa b','a.id_siswa = b. id_siswa');
     $this->db->join('tbkelas c','a.id_kelas = c.id_kelas');
     $this->db->join('tbmapel d','a.id_mapel = d.id_mapel');
